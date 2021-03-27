@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AQI Meter</title>
+
+    <!--Project Files-->
+    <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+    <!--Project Files-->
+
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <!--Bootstrap-->
+
+    <!--jQuery-->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <!--jQuery-->
+
+    <!--Ionicons-->
+    <script type="module" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule="" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"></script>
+    <!--Ionicons-->
+
+    <!--Chart JS-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <!--Chart JS-->
+</head>
+
+<div class="selector">
+    <p class="tabs" id="pollenTab">Pollen</p>
+    <p class="tabs" id="weatherTab">Weather</p>
+    <p class="tabs" id="aqiTab">ML Predictions</p>
+</div>
+
+<body>
+    <h1 class="placeName" id="placeName"></h1>
+    <h1 class="placeName" id="lat"></h1>
+    <h1 class="placeName" id="lon"></h1>
+
+    <div class="everythingAQI" style="padding-top: 55px;">
+
+        <div class="whitespace"></div>
+        <div class="card">
+            <div>
+                <img src="{{url_for('static', filename='images/range.png')}}" class="range" id="range">
+                <h1 id="aqi"></h1>
+                <p class="aqiStatus"><span id="aqiStatus"></span> <span id="sensitiveGroups"> Air Quality</span></p>
+            </div>
+
+            <div class="card-body">
+                <h5 class="card-title">AQI (Air Quality Index)</h5>
+                <p class="card-text" style="color: #c4c4c4">The air quality index in <span id="placeNameText"></span> is
+                    <span id="aqiText"></span>. this makes your air quality <span id="aqiStatusText"></span>. Scroll to
+                    view more statistics regarding the air quality.</p>
+            </div>
+        </div>
+
+        <div class="card" style="padding-top: 0px; margin-top: 10px;">
+            <div class="card-body">
+                <h5 class="card-title">Health Implications</h5>
+                <div class="dropdown" id="dropdown">
+                    <p class="iconLabel" id="generalLabel">General <ion-icon name="chevron-up-outline"
+                            class="implicationIcon" id="generalIcon"></ion-icon>
+                    </p>
+                    <p id="general"></p>
+                    <hr>
+
+                    <p class="iconLabel" id="activeLabel">Active Population <ion-icon name="chevron-down-outline"
+                            class="implicationIcon" id="activeIcon"></ion-icon>
+                    </p>
+                    <p class="paragraph" id="active"></p>
+                    <hr>
+
+                    <p class="iconLabel" id="childrenLabel">Children <ion-icon name="chevron-down-outline"
+                            class="implicationIcon" id="childrenIcon"></ion-icon>
+                    </p>
+                    <p class="paragraph" id="children"></p>
+                    <hr>
+
+                    <p class="iconLabel" id="elderlyLabel">Elderly <ion-icon name="chevron-down-outline"
+                            class="implicationIcon" id="elderlyIcon"></ion-icon>
+                    </p>
+                    <p class="paragraph" id="elderly"></p>
+                    <hr>
+
+                    <p class="iconLabel" id="lungLabel">Lung/Heart Diseases <ion-icon name="chevron-down-outline"
+                            class="implicationIcon" id="lungIcon"></ion-icon>
+                    </p>
+                    <p class="paragraph" id="lung"></p>
+
+                    <button type="button" class="btn my-2 my-sm-0 learnMore" style="color:rgb(211, 207, 207);"
+                        id="learnMore"
+                        onclick="location.href='https://ww2.arb.ca.gov/news/multimedia-release-carb-offers-guidance-protecting-yourself-exposure-smoke-wildfires/printable/print';">Learn
+                        More<ion-icon name="exit-outline" class="exitIcon"></ion-icon></button><br><br>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="padding-top: 0px; margin-top: 10px; margin-bottom: 20px;">
+            <div class="card-body">
+                <h5 class="card-title">Pollutant Info</h5>
+                <div class="pollutants">
+                    <p class="card-text">Dominant Pollutant: <span id="dominant"></span></p>
+                    <p class="card-text" style="color: white;">PM</span><sub>2.5</sub><span
+                            class="number">&nbsp;µg/m3</span><span id="pm25" class="number"></span></p>
+                    <hr>
+                    <p class="card-text" style="color: white;">O<sub>3</sub><span class="number">&nbsp;ppb</span><span
+                            id="o3" class="number"></span></p>
+                    <hr>
+                    <p class="card-text" style="color: white;">PM<sub>10</sub><span
+                            class="number">&nbsp;µg/m3</span><span id="pm10" class="number"></span></p>
+                    <hr>
+                    <p class="card-text" style="color: white;">NO<sub>2</sub><span class="number">&nbsp;ppb</span><span
+                            id="no2" class="number"></span></p>
+                    <hr>
+                    <p class="card-text" style="color: white;">CO<span class="number">&nbsp;ppb</span><span id="co"
+                            class="number"></span></p>
+                    <hr>
+                    <p class="card-text" style="color: white;">SO<sub>2</sub><span class="number">&nbsp;ppb</span><span
+                            id="so2" class="number"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="padding-top: 25px;" id="grassCard">
+        <div>
+            <h1 class="label">Grass Pollen</h1>
+            <h1 class="pollenIndicators">
+                <span id="grassPollen"></span>/5
+            </h1>
+            <p class="card-text descriptions">
+                The pollen level is <span id="grassDescription"></span>
+            </p>
+        </div>
+    </div>
+
+    <div class="card" style="padding-top: 25px; margin-top: 15px;" id="treeCard">
+        <div>
+            <h1 class="label">Tree Pollen</h1>
+            <h1 class="pollenIndicators">
+                <span id="treePollen"></span>/5
+            </h1>
+            <p class="card-text descriptions">
+                The pollen level is <span id="treeDescription"></span>
+            </p>
+        </div>
+    </div>
+
+    <div class="card" style="padding-top: 25px; margin-top: 15px;" id="weedCard">
+        <div>
+            <h1 class="label">Weed Pollen</h1>
+            <h1 class="pollenIndicators">
+                <span id="weedPollen"></span>/5
+            </h1>
+            <p class="card-text descriptions">
+                The pollen level is <span id="weedDescription"></span>
+            </p>
+        </div>
+    </div>
+
+    <div class="card" style="padding-top: 0px; margin-top: 10px;" id="weatherCard">
+        <div class="card-body">
+            <h5 class="card-title">Weather in <span id="weatherCityName"></span></h5>
+            <img id="weatherImage" src="">
+            <p class="card-text" style="color: #c4c4c4" id="weatherStatus"></p>
+            <p id="temperature"></p>
+            <p id="feelsLike"></p>
+            <p id="humidity"></p>
+            <p id="pressure"></p>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom" id="navbar" style="position: relative;">
+        <div class="container-fluid" style="width: 100%;">
+            <a class="navbar-brand" href="index.html" style="color: #ff6f00">AQI Meter</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" style="color: #ff6f00">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/about"
+                            style="color: rgb(211, 207, 207)">About</a>
+                    </li>
+                    <i class="bi bi-github"></i>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li id="search">
+                        <div class="form-inline navbar-nav text-right">
+                            <input autocomplete="false" id="input" class="form-control mr-sm-2"
+                                placeholder="Change Location"
+                                style="background-color: #1f1e1e; border: #ff6f00; width: 400px; color: white; z-index: 2000;">
+                            <div class="searchResults" id="searchResults">
+                                <div class="searchText" id="searchText">
+
+                                </div>
+                            </div>
+                            <button id="submit" class="btn my-2 my-sm-0"
+                                style="border-color:#ff6f00; color: rgb(211, 207, 207);">Search</button>
+                        </div>
+                    </li>
+                </ul>
+
+                <div>
+                    <p><span id="cityState"></span></p>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="mapDiv">
+        <iframe id="map"></iframe>
+    </div>
+
+    <div class="chart" id="chartDiv">
+        <canvas id="chart"></canvas>
+    </div>
+
+    <h1 id="test" style="display: none;">
+        {{ predictions }}
+    </h1>
+
+    <div class="chart">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script type="text/javascript" src="{{url_for('static', filename='js/main.js')}}"></script>
+
+</body>
+
+
+</html>
