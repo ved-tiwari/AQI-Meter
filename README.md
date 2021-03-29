@@ -6,7 +6,7 @@
 
 ## About the project
 ![Screenshot 2021-03-27 190439](https://user-images.githubusercontent.com/79772110/112737254-696e4000-8f2f-11eb-916f-4d9bbe2e3928.png)
-> As time progresses, our air quality continues to worsen at an ever alarming rate. Many factories and vehicles are emitting thousands of tons of emissions in the air and people > who are living in places with more air pollution are suffering as a result. Myself and many others are concerned about the ongoing air quality issue. I was motivated to create > this project because I noticed that there is not enough consolidated data that presents both pollutants and pollen markers in one app.
+> As time progresses, our air quality continues to worsen at an ever alarming rate. Many factories and vehicles are emitting thousands of tons of emissions in the air and people  who are living in places with more air pollution are suffering as a result. Myself and many others are concerned about the ongoing air quality issue. I was motivated to create  this project because I noticed that there is not enough consolidated data that presents both pollutants and pollen markers in one app.
 > 
 > AQI Meter features a suite of unique features bundled in one software application which is unlike any other program
 > 
@@ -38,6 +38,9 @@
 
 > <a href="https://docs.google.com/presentation/d/1uL1zdqib3rVWcz3U2vlHBt3_JNZM_p1F_xvAdqO4iT8/edit?usp=sharing">View about Google Slides</a>
 
+## Machine Learning
+> AQI Meter uses a linear regression algorithm to predict future AQI values. The historical data for the past 17 hours is sent to the python backend via an AJAX call. Afterwords, the scikitlearn module for python predicts future air quality values for the next 6 hours. Then using jinja syntax provided with flask, the predictions are sent back to JavaScript to chart the data using the chartjs library.
+
 ## Built With
 <ul>
   <li>
@@ -51,6 +54,9 @@
   </li>
   <li>
     Bootstrap
+  </li>
+  <li>
+    Jinja
   </li>
   <li>
     Flask framework (Python)
